@@ -1,38 +1,30 @@
-version: '3.8'
+version: '3.1'
 
 services:
-  db:
-    image: postgres:15
-    container_name: odoo16_db
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=odoo
-      - POSTGRES_PASSWORD=odoo_password
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - odoo-db-data:/var/lib/postgresql/data/pgdata
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-
-  odoo:
+  web:
     image: odoo:16
-    container_name: odoo16_web
     depends_on:
       - db
     ports:
       - "8069:8069"
-    environment:
-      - HOST=db
-      - USER=odoo
-      - PASSWORD=odoo_password
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
-      - ./etc:/etc/odoo
-    restart: unless-stopped
-    # Removed the problematic command - let Odoo handle database creation through web interface
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=myodoo
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=myodoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
 
 volumes:
-  odoo-db-data:
   odoo-web-data:
+  odoo-db-data:
