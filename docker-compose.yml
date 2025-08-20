@@ -31,12 +31,7 @@ services:
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
     restart: unless-stopped
-    command: --
-      --database=postgres
-      --db_host=db
-      --db_port=5432
-      --db_user=odoo
-      --db_password=odoo_password
+    # Removed the problematic command - let Odoo handle database creation through web interface
 
 volumes:
   odoo-db-data:
